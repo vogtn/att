@@ -43,48 +43,56 @@ export class PlayerView extends View {
     /*
     component lifecyle
     ***************************/
-
     get html(): any {
       /** @jsx _this.parse */(() => { this; })()//Typescript solution to ensure self is captured as _this within rest of block
-        return <div class={stylesPlayer.view + (this.modal ? ' ' + stylesPlayer.modal : '') + (this.fullscreen ? ' ' + stylesPlayer.fullscreen : '')} data-modal={this.modal || this.fullscreen}
-            event-click={(event: Event) => {//closes modal when click on background only
-                if (!this.modal)
-                    return;
-                if (event.target === this.element) {
-                    this.close();
-                }
-            }}>
+      
+      //var declarations
+      let fullScreen = this.fullscreen ? ' ' + stylesPlayer.fullscreen : '';
+      let modal = this.modal ? ' ' + stylesPlayer.modal : '';
 
-            <div aria-live="polite" style="position:absolute;visible:hidden;">{this.ariaLiveText}</div>
-            <div class={stylesPlayer.player + (this.modal ? ' ' + stylesPlayer.modal : '') + (this.fullscreen ? ' ' + stylesPlayer.fullscreen : '')}>
+        return(
+            <div class={stylesPlayer.view + modal + fullScreen} 
+                data-modal={this.modal || this.fullscreen}
+                event-click={(event: Event) => {//closes modal when click on background only
+                    if (!this.modal)
+                        return;
+                    if (event.target === this.element) {
+                        this.close();
+                    }
+                }}>
+                <div aria-live="polite" style="position:absolute;visible:hidden;">{this.ariaLiveText}</div>
+                <div class={stylesPlayer.player + modal + fullScreen}>
 
-                {this.closeJSX}
+                    {this.closeJSX}
 
-                <div class={stylesPlayer.viewport + (this.fullscreen ? ' ' + stylesPlayer.fullscreen : '') + (this.modal ? ' ' + stylesPlayer.modal : '')}>
+                    <div class={stylesPlayer.viewport + fullScreen + modal}>
 
-                    <div style={(this.fullscreen ? 'display:none; ' : '')}
-                        class={stylesPlayer.title} >{this.videoSubject.getProp('title')}</div>
+                        <div 
+                            style={(this.fullscreen ? 'display:none; ' : '')}
+                            class={stylesPlayer.title} >{this.videoSubject.getProp('title')}
+                        </div>
 
-                    {this.videoJSX}
+                        {this.videoJSX}
 
-                    {this.captionJSX}
+                        {this.captionJSX}
 
-                    {this.small ? this.createPanel() : ''}
+                        {this.small ? this.createPanel() : ''}
 
-                    <div class={stylesPlayer.controller + (this.fullscreen ? ' ' + stylesPlayer.fullscreen : '')} role="group">
-                        {this.playBtn} {this.seekRange} {this.duration} {this.muteBtn} {this.volumeRange}{this.ccBtn}{this.transcriptBtn}{this.fullscreenBtn}
-                        {this._config['ratings'] && this._config['ratings'].indexOf('inline') > -1 ? this.thumbsInlineJSX : ''}
+                        <div class={stylesPlayer.controller + (fullScreen)} role="group">
+                            {this.playBtn} {this.seekRange} {this.duration} {this.muteBtn} {this.volumeRange}{this.ccBtn}{this.transcriptBtn}{this.fullscreenBtn}
+                            {this._config['ratings'] && this._config['ratings'].indexOf('inline') > -1 ? this.thumbsInlineJSX : ''}
+                        </div>
+
+                        {this._config['ratings'] ?
+                            this._config['ratings'].indexOf('inline') == -1 ?
+                                <Ratings id="ratings" type={this._config['ratings']} hidden={(this.player.currentTime > 5) ? false : true}></Ratings> :
+                                <Ratings id="ratings" style="display:none;" transition={false} type={this._config['ratings']} hidden={(this.player.currentTime > 5) ? false : true}></Ratings>
+                            : ''}
                     </div>
-
-                    {this._config['ratings'] ?
-                        this._config['ratings'].indexOf('inline') == -1 ?
-                            <Ratings id="ratings" type={this._config['ratings']} hidden={(this.player.currentTime > 5) ? false : true}></Ratings> :
-                            <Ratings id="ratings" style="display:none;" transition={false} type={this._config['ratings']} hidden={(this.player.currentTime > 5) ? false : true}></Ratings>
-                        : ''}
+                    {this.small ? '' : this.createPanel()}
                 </div>
-                {this.small ? '' : this.createPanel()}
             </div>
-        </div>;
+        )
     }
 
     protected initialize() {
