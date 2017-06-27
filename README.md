@@ -1,7 +1,6 @@
 # Rich Media Apps
 This repo contains the GVP Rich Media team's applications. 
 
-### Development Setup:
 
 ## Cloning Repo locally
 
