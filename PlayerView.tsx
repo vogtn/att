@@ -68,7 +68,7 @@ export class PlayerView extends View {
 
                     <div class={stylesPlayer.viewport + fullScreen + modal}>
 
-                        <div style={(this.fullscreen && 'display:none; ')}
+                        <div style={(this.fullscreen ? 'display:none; ' : '')}
                             class={stylesPlayer.title} >{this.videoSubject.getProp('title')}
                         </div>
 
@@ -76,11 +76,11 @@ export class PlayerView extends View {
 
                         {this.captionJSX}
 
-                        {this.small && this.createPanel()}
+                        {this.small ? this.createPanel() : ''}
 
                         <div class={stylesPlayer.controller + (fullScreen)} role="group">
                             {this.playBtn} {this.seekRange} {this.duration} {this.muteBtn} {this.volumeRange}{this.ccBtn}{this.transcriptBtn}{this.fullscreenBtn}
-                            {ratings && ratings.indexOf('inline') > -1 && this.thumbsInlineJSX}
+                            {ratings && ratings.indexOf('inline') > -1 ? this.thumbsInlineJSX : ''}
                         </div>
 
                         {ratings &&
