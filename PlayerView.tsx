@@ -49,6 +49,7 @@ export class PlayerView extends View {
       //var declarations
       let fullScreen = this.fullscreen ? ' ' + stylesPlayer.fullscreen : '';
       let modal = this.modal ? ' ' + stylesPlayer.modal : '';
+      let ratings = this._config['ratings'];
 
         return(
             <div class={stylesPlayer.view + modal + fullScreen} 
@@ -67,8 +68,7 @@ export class PlayerView extends View {
 
                     <div class={stylesPlayer.viewport + fullScreen + modal}>
 
-                        <div 
-                            style={(this.fullscreen ? 'display:none; ' : '')}
+                        <div style={(this.fullscreen && 'display:none; ')}
                             class={stylesPlayer.title} >{this.videoSubject.getProp('title')}
                         </div>
 
@@ -76,18 +76,17 @@ export class PlayerView extends View {
 
                         {this.captionJSX}
 
-                        {this.small ? this.createPanel() : ''}
+                        {this.small && this.createPanel()}
 
                         <div class={stylesPlayer.controller + (fullScreen)} role="group">
                             {this.playBtn} {this.seekRange} {this.duration} {this.muteBtn} {this.volumeRange}{this.ccBtn}{this.transcriptBtn}{this.fullscreenBtn}
-                            {this._config['ratings'] && this._config['ratings'].indexOf('inline') > -1 ? this.thumbsInlineJSX : ''}
+                            {ratings && ratings.indexOf('inline') > -1 && this.thumbsInlineJSX}
                         </div>
 
-                        {this._config['ratings'] ?
-                            this._config['ratings'].indexOf('inline') == -1 ?
-                                <Ratings id="ratings" type={this._config['ratings']} hidden={(this.player.currentTime > 5) ? false : true}></Ratings> :
-                                <Ratings id="ratings" style="display:none;" transition={false} type={this._config['ratings']} hidden={(this.player.currentTime > 5) ? false : true}></Ratings>
-                            : ''}
+                        {ratings &&
+                            ratings.indexOf('inline') == -1 ?
+                                <Ratings id="ratings" type={ratings} hidden={(this.player.currentTime > 5) ? false : true}></Ratings> :
+                                <Ratings id="ratings" style="display:none;" transition={false} type={ratings} hidden={(this.player.currentTime > 5) ? false : true}></Ratings>}
                     </div>
                     {this.small ? '' : this.createPanel()}
                 </div>
@@ -559,7 +558,7 @@ export class PlayerView extends View {
             aria-expanded={(this.panel && this.panel.value === TranscriptComponent) ? 'true' : 'false'}
             aria-controls="gvpTranscriptPanel"
             title={(this.panel && this.panel.value === TranscriptComponent) ? 'Transcript Open' : 'Transcript Closed'}
-        >
+            >
             {(() => {
                 return TranscriptButton.jsx(this.parse, this.panel ? this.panel.value === TranscriptComponent : false);
             })()}
