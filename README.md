@@ -14,7 +14,7 @@ This repo contains the GVP Rich Media team's applications.
 
 4.  Clone Team Repo to local machine
 
-###OR
+### OR
 
 #### Git
 
